@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Joke Generator</title>
+    <style>
+        body {
+            background-color: #041836; /* Dark Blue */
+            color: #FFFFFF; /* White */
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin: 20px;
+            padding: 20px;
+            background-color: #08A0E9; /* Light Blue */
+            border-radius: 8px;
+        }
+        h1, p {
+            color: #FFFFFF; /* White */
+        }
+        #joke, #search-joke {
+            color: #FFFFFF; /* White */
+            font-weight: bold;
+        }
+        /* Additional styling for form inputs and buttons */
+        input, button {
+            margin: 5px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #FFFFFF; /* White */
+            color: #041836; /* Dark Blue */
+            cursor: pointer;
+        }
+        input {
+            background-color: #FFFFFF; /* White */
+            color: #041836; /* Dark Blue */
+        }
+    </style>
+    <script> //will call backend service
+        function getJoke() {
+            var category = document.getElementById('category').value;
+            fetch('http://localhost:5000/display_joke/' + category)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('joke').innerText = data.joke;
+                });
+            return false;
+        }
+    </script>
+    <script>        
+        function searchJoke(event) {
+            event.preventDefault();
+            var term = document.getElementById('term').value;
+            fetch('http://localhost:5000/search_joke/' + term)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('search-joke').innerText = data.joke;
+                });
+        }
+    </script>
+</head>
+<body>
+    <h1 class="grand-title">Welcome to the Joke Generator</h1>
+    <div class="columns">
+        <div class="column">
+            <h2 class="title">New Joke</h2>
+            <form onsubmit="return getJoke();">
+                <label for="category">Choose a joke type:</label>
+                <select id="category">
+                    <option value="programming">Programming</option>
+                    <option value="christmas">Christmas</option>
+                </select>
+                <input type="submit" value="Get Joke">
+                <p id="joke"></p>
+            </form>
+        </div>
+
+        <div class="column">
+            <h2 class="title">Search Joke</h2>
+            <form onsubmit="searchJoke(event)">
+                <input type="text" id="term" placeholder="Enter search term">
+                <button type="submit">Search</button>
+            </form>
+            <p id="search-joke"></p>
+        </div>
+    </div>
+</body>
+</html>
